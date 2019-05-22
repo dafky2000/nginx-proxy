@@ -123,7 +123,7 @@ server {
 
 {{ $ip_hash := or (first (groupByKeys $containers "Env.USE_IP_HASH")) "0" }}
 
-upstream {{ $upsteam_name }} {
+upstream {{ $upstream_name }} {
 {{/* If the container requests to load-balance by connection IP */}}
 {{ if ne $ip_hash "0" }}
 	ip_hash;
