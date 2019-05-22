@@ -121,8 +121,13 @@ server {
 {{ $is_regexp := hasPrefix "~" $host }}
 {{ $upstream_name := when $is_regexp (sha1 $host) $host }}
 
-# {{ $host }}
-upstream {{ $upstream_name }} {
+{{ $ip_hash := or (first (groupByKeys $containers "Env.USE_IP_HASH")) "0" }}
+
+upstream {{ $upsteam_name }} {
+{{/* If the container requests to load-balance by connection IP */}}
+{{ if ne $ip_hash "0" }}
+	ip_hash;
+{{ end }}
 
 {{ range $container := $containers }}
 	{{ $addrLen := len $container.Addresses }}
